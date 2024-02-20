@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"){
                 'httponly' => true,
                 'samesite' => 'Lax' // or 'Strict'
             ]);
-            
+
             session_start();  
 
             session_regenerate_id();
@@ -68,6 +68,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"){
         <input type="password" name="password" id="password">
 
         <button>Login!</button>
+        
     </form>
+
+    <a href="account-recovery.html" class="button">Recovery</a>
 
 </body>
