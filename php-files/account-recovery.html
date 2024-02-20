@@ -1,0 +1,23 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Recovery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+</head>
+<body>
+    <h1>Account Recovery</h1>
+    <p>Please enter your username and account recovery code.</p>
+    <form action="account-recovery.php" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="recovery_hash">Recovery Code:</label>
+        <input type="text" id="recovery_hash" name="recovery_hash" required>
+        
+        <button type="submit">Recover Account</button>
+    </form>
+</body>
+</html>

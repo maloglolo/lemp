@@ -26,15 +26,15 @@ if ($_POST["password"] !== $_POST["password_confirmation"]) {
 
 $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
-$mysqli = require __DIR__ . "/database.php";
-
 #user_hash test
+#Todo: convert to shorter base64 or something
 $email = $_POST['email'];
 $currentTime = time();
 $randomBytes = openssl_random_pseudo_bytes(16);
 $randomComponent = bin2hex($randomBytes);
 $user_hash = hash('sha256', $email . $currentTime . $randomComponent);
 
+$mysqli = require __DIR__ . "/database.php";
 
 ini_set('session.cookie_secure', '1');
 ini_set('session.cookie_httponly', '1');
@@ -47,7 +47,6 @@ session_start();
                                     
 $_SESSION['user_hash'] = $user_hash; 
 
-#var_dump($user_hash);
 
 $sql = "INSERT INTO user (name, email, password_hash, user_hash)
         VALUES( ?, ?, ?, ?)";
@@ -57,8 +56,6 @@ $stmt = $mysqli->stmt_init();
 if ( ! $stmt->prepare($sql)) {
     die("SQL error: " . $mysqli->error);
 }
-
-
 
 $stmt->bind_param("ssss",
                     $_POST["name"],
@@ -79,8 +76,6 @@ header("Location: signup-success.php");
     }
     die("Error: " . $stmt->error . " " . $stmt->errno);
 }
-
-
 
 
 #($_POST);
