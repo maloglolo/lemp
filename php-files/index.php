@@ -1,6 +1,13 @@
 <?php
+ini_set('session.cookie_secure', '1');
+ini_set('session.cookie_httponly', '1');
+session_set_cookie_params([
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Lax' // or 'Strict'
+]);
+session_start();  
 
-session_start();
 
 if (isset($_SESSION["user_id"])) {
 

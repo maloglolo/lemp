@@ -1,4 +1,6 @@
 <?php
+ini_set('session.cookie_secure', '1');
+ini_set('session.cookie_httponly', '1');
 session_start();
 session_regenerate_id(); 
     if (isset($_SESSION['user_hash'])) {
@@ -10,6 +12,8 @@ session_regenerate_id();
     echo "Hash not found."; // Handle cases where the hash is not set.
     exit;    
 }
+session_destroy();
+#var_dump($user_hash);
 ?>
 
 <!DOCTYPE html>

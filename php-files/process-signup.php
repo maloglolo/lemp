@@ -35,6 +35,14 @@ $randomBytes = openssl_random_pseudo_bytes(16);
 $randomComponent = bin2hex($randomBytes);
 $user_hash = hash('sha256', $email . $currentTime . $randomComponent);
 
+
+ini_set('session.cookie_secure', '1');
+ini_set('session.cookie_httponly', '1');
+session_set_cookie_params([
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Lax' // or 'Strict'
+]);
 session_start();     
                                     
 $_SESSION['user_hash'] = $user_hash; 

@@ -19,7 +19,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"){
 
         if (password_verify($_POST["password"], $user["password_hash"])) {
 
-            session_start();
+            ini_set('session.cookie_secure', '1');
+            ini_set('session.cookie_httponly', '1');
+            session_set_cookie_params([
+                'secure' => true,
+                'httponly' => true,
+                'samesite' => 'Lax' // or 'Strict'
+            ]);
+            
+            session_start();  
 
             session_regenerate_id();
 
