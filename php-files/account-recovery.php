@@ -29,7 +29,7 @@ if (!isset($_SESSION['username_for_password_reset'])) {
 // Validate the SHA-256 hash format
 if (!preg_match('/^[a-f0-9]{64}$/i', $userSubmittedHash)) {
     echo "Invalid recovery code format.";
-    exit; // Stop execution if the format is invalid
+    exit; 
 }
 
 // Prepare SQL to find the user by their username and unique hash
