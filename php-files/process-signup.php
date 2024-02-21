@@ -47,7 +47,6 @@ session_start();
                                     
 $_SESSION['user_hash'] = $user_hash; 
 
-
 $sql = "INSERT INTO user (name, email, password_hash, user_hash)
         VALUES( ?, ?, ?, ?)";
 
@@ -62,8 +61,6 @@ $stmt->bind_param("ssss",
                     $_POST["email"],
                     $password_hash,
                     $user_hash);
-
-
 if ($stmt->execute()){
 
 header("Location: signup-success.php");
@@ -76,8 +73,3 @@ header("Location: signup-success.php");
     }
     die("Error: " . $stmt->error . " " . $stmt->errno);
 }
-
-
-#($_POST);
-
-#var_dump($password_hash);

@@ -1,31 +1,18 @@
 <?php
 session_start();
 
-
-
-#session_start();
-#echo '<pre>';
-#var_dump($_SESSION);
-#echo '</pre>';
-
-
-
-
 // Check if the username for password reset is set in the session
 if (!isset($_SESSION['username_for_password_reset'])) {
     // Redirect to the account recovery form if not set
     header('Location: account-recovery.php');
     exit;
 }
-
 // Include the database connection setup
 $mysqli = require __DIR__ . "/database.php";
-
 // Retrieve the new password and confirmation from the POST request
 $newPassword = $_POST['new_password'] ?? '';
 $confirmPassword = $_POST['confirm_password'] ?? '';
 $username = $_SESSION['username_for_password_reset'];
-
 // Ensure the new passwords match and meet any required criteria
 if ($newPassword !== $confirmPassword) {
     // Redirect or inform the user that passwords do not match
@@ -34,7 +21,6 @@ if ($newPassword !== $confirmPassword) {
     header('Location: password-reset.php');
     exit;
 }
-
 // Add any additional password strength validation here
 
 // Proceed with updating the user's password in the database
@@ -50,11 +36,9 @@ if (!$stmt) {
     header('Location: password-reset.php');
     exit;
 }
-
 // Bind parameters and execute the statement
 $stmt->bind_param("ss", $hashedPassword, $username);
 $executeSuccess = $stmt->execute();
-
 // Check if the password was successfully updated
 if ($executeSuccess && $stmt->affected_rows > 0) {
     // Password reset was successful
@@ -73,7 +57,6 @@ if ($executeSuccess && $stmt->affected_rows > 0) {
     header('Location: password-reset.php');
     exit;
 }
-
 // Close statement and connection
 $stmt->close();
 $mysqli->close();

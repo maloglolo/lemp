@@ -5,7 +5,6 @@ if (!$fileId) {
     echo "File ID is required.";
     exit;
 }
-
 // You can add additional checks here to ensure the file exists or belongs to the user
 ?>
 <head>
