@@ -74,7 +74,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Get info from the db
 $userId = $_SESSION['user_id'];
-$result = $mysqli->query("SELECT id, filepath, filesize, filename, uploaded_at FROM uploaded_files WHERE user_id = $userId");
+$result = $mysqli->query("SELECT id, filepath, filesize, filename, uploaded_at, user_ip FROM uploaded_files WHERE user_id = $userId");
 
 // Display file info and delete script
 while ($row = $result->fetch_assoc()) {
@@ -82,6 +82,8 @@ while ($row = $result->fetch_assoc()) {
     $filenameEscaped = htmlspecialchars($row['filename']);
     $filesizeKB = number_format($row['filesize'] / 1024, 2); // Format the file size to KB with 2 decimal places
     $uploadedAtEscaped = htmlspecialchars($row['uploaded_at']);
+    $userIp = htmlspecialchars($row['user_ip']); // Retrieve and escape the user's IP address
+    
     
     echo '<div>';
     // Make the thumbnail a clickable link that opens the full-size image in a new tab
@@ -91,6 +93,7 @@ while ($row = $result->fetch_assoc()) {
     echo '<p>Filename: ' . $filenameEscaped . '</p>';
     echo '<p>Size: ' . $filesizeKB . ' KB</p>';
     echo '<p>Uploaded: ' . $uploadedAtEscaped . '</p>';
+    echo '<p>User IP: ' . $userIp . '</p>'; // Display the user's IP address
     echo '<form action="delete_file.php" method="post"><input type="hidden" name="file_id" value="' . $row['id'] . '"/><input type="submit" value="Delete"/></form>';
     echo '</div>';
 }
