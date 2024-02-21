@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
     $userIp = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? null; // Get the user's IP address
 }
 
-echo "Your IP address: $userIp";
+#echo "Your IP address: $userIp";
 
 
 $target_dir = "uploads/";
@@ -81,7 +81,12 @@ if (isset($_POST["submit"])) {
             $stmt->bind_param("isisiisssssss", $userId, $target_file, $filesize, $newFileName, $imageWidth, $imageHeight, $mime, $cameraMake, $cameraModel, $exposureTime, $fNumber, $isoSpeedRatings, $userIp);
 
             if ($stmt->execute()) {
-                echo "File uploaded and EXIF data stored successfully.";
+                // Set a success message in session
+                $_SESSION['upload_status'] = "Your IP address: $userIp. File uploaded and EXIF data stored successfully.";
+            
+                // Redirect to the confirmation page
+                header('Location: confirmation.php');
+                exit; // Ensure no further script execution after redirection
             } else {
                 echo "Error storing file reference and EXIF data: " . $stmt->error;
             }

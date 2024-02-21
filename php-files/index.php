@@ -22,10 +22,10 @@ if (isset($_SESSION["user_id"])) {
 }
 
 // Get the user's IP address
-$userIp = $_SERVER['REMOTE_ADDR'];
+#$userIp = $_SERVER['REMOTE_ADDR'];
 
 // Display the user's IP address
-echo "Your IP address: $userIp";
+#echo "Your IP address: $userIp";
 
 ?>
 
@@ -34,9 +34,7 @@ echo "Your IP address: $userIp";
 <html>
 
 <head>
-    <title>Home</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
 </head>
 
 <body>
@@ -94,7 +92,10 @@ while ($row = $result->fetch_assoc()) {
     echo '<p>Size: ' . $filesizeKB . ' KB</p>';
     echo '<p>Uploaded: ' . $uploadedAtEscaped . '</p>';
     echo '<p>User IP: ' . $userIp . '</p>'; // Display the user's IP address
-    echo '<form action="delete_file.php" method="post"><input type="hidden" name="file_id" value="' . $row['id'] . '"/><input type="submit" value="Delete"/></form>';
+    
+    // Link to the confirmation page instead of a direct form submission
+    echo '<a href="confirm_delete.php?file_id=' . $row['id'] . '" style="color: red;">Delete</a>';
+    
     echo '</div>';
 }
         
