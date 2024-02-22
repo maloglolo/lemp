@@ -23,12 +23,12 @@ if (!isset($_SESSION['username_for_password_reset'])) {
         exit;
 }
 // Validate the SHA-256 hash format
- if (!preg_match('/^[a-f0-9]{64}$/i', $userSubmittedHash)) {
+ if (!preg_match('/^[a-f0-9]{8}$/i', $userSubmittedHash)) {
         echo "Invalid recovery code format.";
         exit; 
 }
 // Prepare SQL to find the user by their username and unique hash
-$sql = "SELECT * FROM user WHERE name = ? AND user_hash = ?";
+$sql = "SELECT * FROM user WHERE name = ? AND short_user_hash = ?";
 $stmt = $mysqli->prepare($sql);
 // Check if statement preparation was successful
  if (!$stmt) {

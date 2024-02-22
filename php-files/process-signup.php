@@ -27,7 +27,9 @@ $randomBytes = openssl_random_pseudo_bytes(16);
 $randomComponent = bin2hex($randomBytes);
 $user_hash = hash('sha256', $email . $currentTime . $randomComponent);
 
-###$encoded_user_hash = base64_encode($user_hash);
+$short_user_hash = substr($user_hash, 0, 8); // For demonstration, using the first 8 characters
+
+#var_dump($short_user_hash);
 
 $mysqli = require __DIR__ . "/database.php";
 
@@ -41,20 +43,22 @@ session_set_cookie_params([
 session_start();     
                                     
 $_SESSION['user_hash'] = $user_hash; 
+$_SESSION['short_user_hash'] = $short_user_hash;
 
-$sql = "INSERT INTO user (name, email, password_hash, user_hash)
-        VALUES( ?, ?, ?, ?)";
+$sql = "INSERT INTO user (name, email, password_hash, user_hash, short_user_hash)
+        VALUES( ?, ?, ?, ?, ?)";
 
 $stmt = $mysqli->stmt_init();
 
 if ( ! $stmt->prepare($sql)) {
     die("SQL error: " . $mysqli->error);
 }
-$stmt->bind_param("ssss",
+$stmt->bind_param("sssss",
                     $_POST["name"],
                     $_POST["email"],
                     $password_hash,
-                    $user_hash);
+                    $user_hash,
+                    $short_user_hash);
 if ($stmt->execute()){
     header("Location: signup-success.php");
     exit;
