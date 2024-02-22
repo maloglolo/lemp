@@ -1,6 +1,6 @@
 <?php
 session_start();
-$mysqli = require __DIR__ . "/database.php";
+$mysqli = require __DIR__ . "/database_connection.php";
 
 // Get user-submitted username and recovery hash
 $username = $_POST['username'] ?? '';

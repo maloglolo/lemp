@@ -1,6 +1,6 @@
 <?php
 session_start();
-$mysqli = require __DIR__ . "/database.php";
+$mysqli = require __DIR__ . "/database_connection.php";
 
 if (isset($_POST['file_id']) && isset($_SESSION['user_id'])) {
     $fileId = $_POST['file_id'];

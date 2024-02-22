@@ -2,7 +2,7 @@
 session_start();
 
 // Include the database connection and capture the returned mysqli object
-$mysqli = require __DIR__ . "/database.php";
+$mysqli = require __DIR__ . "/database_connection.php";
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {

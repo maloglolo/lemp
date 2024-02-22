@@ -8,7 +8,7 @@ if (!isset($_SESSION['username_for_password_reset'])) {
     exit;
 }
 // Include the database connection setup
-$mysqli = require __DIR__ . "/database.php";
+$mysqli = require __DIR__ . "/database_connection.php";
 // Retrieve the new password and confirmation from the POST request
 $newPassword = $_POST['new_password'] ?? '';
 $confirmPassword = $_POST['confirm_password'] ?? '';

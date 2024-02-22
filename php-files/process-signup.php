@@ -31,7 +31,7 @@ $short_user_hash = substr($user_hash, 0, 8); // For demonstration, using the fir
 
 #var_dump($short_user_hash);
 
-$mysqli = require __DIR__ . "/database.php";
+$mysqli = require __DIR__ . "/database_connection.php";
 
 ini_set('session.cookie_secure', '1');
 ini_set('session.cookie_httponly', '1');
