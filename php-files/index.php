@@ -52,7 +52,7 @@ $result = $mysqli->query("SELECT id, filepath, filesize, filename, uploaded_at, 
 while ($row = $result->fetch_assoc()) {
     $filepathEscaped = htmlspecialchars($row['filepath']);
     $filenameEscaped = htmlspecialchars($row['filename']);
-    $filesizeKB = number_format($row['filesize'] / 1024, 2); // Format the file size to KB with 2 decimal places
+    $filesizeMB = number_format($row['filesize'] / 1048576, 2); // Format the file size to KB with 2 decimal places
     $uploadedAtEscaped = htmlspecialchars($row['uploaded_at']);
     $userIp = htmlspecialchars($row['user_ip']); // Retrieve and escape the user's IP address   
     echo '<div>';
@@ -61,7 +61,7 @@ while ($row = $result->fetch_assoc()) {
     echo '<img src="' . $filepathEscaped . '" alt="' . $filenameEscaped . '" style="width: 100px; height: auto;" />';
     echo '</a>';
     echo '<p>Filename: ' . $filenameEscaped . '</p>';
-    echo '<p>Size: ' . $filesizeKB . ' KB</p>';
+    echo '<p>Size: ' . $filesizeMB . ' MB</p>';
     echo '<p>Uploaded: ' . $uploadedAtEscaped . '</p>';
     echo '<p>User IP: ' . $userIp . '</p>'; // Display the user's IP address
     
