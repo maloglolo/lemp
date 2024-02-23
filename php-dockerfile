@@ -7,9 +7,13 @@ RUN apt-get update && \
 # Installing additional PHP modules
 RUN docker-php-ext-install mysqli pdo pdo_mysql gd zip exif
 
+# Copy custom php.ini file into the container
+COPY php.ini /usr/local/etc/php/php.ini
+
 # Clean up the apt cache to reduce the image size
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+

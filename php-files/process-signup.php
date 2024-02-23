@@ -19,15 +19,14 @@ if ($_POST["password"] !== $_POST["password_confirmation"]) {
     die("Passwords must match!");
 }
 $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
-#user_hash test
-#Todo: convert to shorter base64 or something
+
 $email = $_POST['email'];
 $currentTime = time();
 $randomBytes = openssl_random_pseudo_bytes(16);
 $randomComponent = bin2hex($randomBytes);
 $user_hash = hash('sha256', $email . $currentTime . $randomComponent);
 
-$short_user_hash = substr($user_hash, 0, 8); // For demonstration, using the first 8 characters
+$short_user_hash = substr($user_hash, 0, 8); 
 
 #var_dump($short_user_hash);
 

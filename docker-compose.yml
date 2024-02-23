@@ -22,6 +22,7 @@ services:
         volumes:
             - './php-files:/var/www/html'
             - './nginx-conf:/etc/nginx/conf.d'
+
         depends_on:
             - php
 

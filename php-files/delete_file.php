@@ -2,8 +2,8 @@
 session_start();
 $mysqli = require __DIR__ . "/database_connection.php";
 
-if (isset($_POST['file_id']) && isset($_SESSION['user_id'])) {
-    $fileId = $_POST['file_id'];
+if (isset($_GET['file_id']) && isset($_SESSION['user_id'])) {
+    $fileId = $_GET['file_id'];
     $userId = $_SESSION['user_id'];
     
     // Validate ownership
@@ -19,8 +19,7 @@ if (isset($_POST['file_id']) && isset($_SESSION['user_id'])) {
         $stmt->execute();
         // Redirect back or indicate success
         header("Location: index.php");
-        
-        echo "File deleted successfully.";
+        exit;
     } else {
         echo "File not found or you don't have permission to delete it.";
     }
