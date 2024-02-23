@@ -20,25 +20,26 @@ if (!file_exists($target_dir)) {
     mkdir($target_dir, 0777, true);
 }
 
-// Generate a unique identifier to append to the filename
-$uniqueId = uniqid();
+// Check if file has been uploaded successfully
+if (isset($_FILES["fileToUpload"]["tmp_name"]) && is_uploaded_file($_FILES["fileToUpload"]["tmp_name"])) {
+    // Generate a unique identifier to append to the filename
+    $uniqueId = uniqid();
 
-// Generate the new filename with the unique identifier and original file extension
-$newFileName = $uniqueId . '.' . $fileExtension;
+    // Generate the new filename with the unique identifier and original file extension
+    $newFileName = $uniqueId . '.' . $fileExtension;
 
-// Set the target file path with the new filename
-$target_file = $target_dir . $newFileName;
+    // Set the target file path with the new filename
+    $target_file = $target_dir . $newFileName;
 
-// Check if image file is an actual image or fake image
-if (isset($_POST["submit"])) {
-    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-    if ($check !== false) {
-        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-            $filesize = $_FILES["fileToUpload"]["size"];
-            $imageWidth = $check[0];
-            $imageHeight = $check[1];
-            $mime = $check['mime'];
-            $filename = $newFileName; // Use the new filename
+    // Move the uploaded file to the target directory
+    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+        $filesize = $_FILES["fileToUpload"]["size"];
+        $imageSize = getimagesize($target_file); // Check image size and type
+        
+        if ($imageSize !== false) {
+            $imageWidth = $imageSize[0];
+            $imageHeight = $imageSize[1];
+            $mime = $imageSize['mime'];
 
             // Initialize variables to store EXIF data (if any)
             $cameraMake = $cameraModel = $exposureTime = $fNumber = $isoSpeedRatings = null;
@@ -54,13 +55,15 @@ if (isset($_POST["submit"])) {
                     $isoSpeedRatings = $exif['ISOSpeedRatings'] ?? null;
                 }
             }
+
             // Extend your SQL query and bind_param call to include the 'filename' value
             $stmt = $mysqli->prepare("INSERT INTO uploaded_files (user_id, filepath, filesize, filename, width, height, mime, camera_make, camera_model, exposure_time, f_number, iso_speed_ratings, user_ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             if ($stmt === false) {
                 die('Error preparing statement: ' . $mysqli->error);
             }
-            $stmt->bind_param("isisiisssssss", $userId, $target_file, $filesize, $filename, $imageWidth, $imageHeight, $mime, $cameraMake, $cameraModel, $exposureTime, $fNumber, $isoSpeedRatings, $userIp);
+
+            $stmt->bind_param("isisiisssssss", $userId, $target_file, $filesize, $newFileName, $imageWidth, $imageHeight, $mime, $cameraMake, $cameraModel, $exposureTime, $fNumber, $isoSpeedRatings, $userIp);
 
             if ($stmt->execute()) {
                 // Set a success message in session
@@ -74,10 +77,12 @@ if (isset($_POST["submit"])) {
             }
             $stmt->close();
         } else {
-            echo "Sorry, there was an error uploading your file.";
+            echo "Uploaded file is not an image.";
         }
     } else {
-        echo "File is not an image.";
+        echo "Sorry, there was an error moving the uploaded file.";
     }
+} else {
+    echo "File upload failed.";
 }
 ?>

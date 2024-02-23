@@ -23,6 +23,8 @@ if (isset($_SESSION["user_id"])) {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
 </head>
 <body>
+
+
      <?php if (isset($_SESSION['user_id'])): ?>
         <form action="logout.php" method="post" style="text-align: right;">
             <button type="submit">Logout</button>
