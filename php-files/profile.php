@@ -112,20 +112,51 @@ if (isset($_POST['file_id']) && isset($_SESSION['user_id'])) {
             }
         }
     </script>
+        <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content form,
+        .dropdown-content a {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
-<div style="text-align: right;">
-    <?php if (isset($_SESSION['user_id'])): ?>
-        <form action="logout.php" method="post" style="display: inline;">
-            <button type="submit">Logout</button>
-        </form>
-        <a href="profile.php" style="display: inline; text-decoration: none;">
-            <button>Profile</button>
-        </a>
-        <a href="index.php" style="display: inline; text-decoration: none;">
-            <button>Home</button>
-        </a>
-    <?php endif; ?>
+<?php if (isset($_SESSION['user_id'])): ?>
+    <div class="dropdown" style="float: right;">
+        <button>Menu</button>
+        <div class="dropdown-content">
+            <form action="logout.php" method="post">
+                <button type="submit">Logout</button>
+            </form>
+            <a href="profile.php" style="text-decoration: none;">
+                <button>Profile</button>
+            </a>
+            <a href="index.php" style="text-decoration: none;">
+                <button>Home</button>
+            </a>
+        </div>
+    </div>
+<?php endif; ?>
+
 </div>
 
 <?php

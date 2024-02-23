@@ -1,9 +1,21 @@
 <?php
-session_start();
+ini_set('session.cookie_secure', '1');
+ini_set('session.cookie_httponly', '1');
+session_set_cookie_params([
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Lax' // or 'Strict'
+]);
+session_start();  
 
-// Check if the user is logged in, the comment content is provided, and the image ID is provided
-if (!isset($_SESSION["user_id"]) || !isset($_POST["commentContent"]) || !isset($_POST["imageId"])) {
-    exit("You must be logged in and provide all required fields to post comments.");
+// Check if the user is logged in
+if (!isset($_SESSION["user_id"])) {
+    exit(json_encode(['success' => false, 'message' => 'You must be logged in to submit a comment.']));
+}
+
+// Check if comment content and image ID are provided
+if (!isset($_POST["commentContent"]) || !isset($_POST["imageId"])) {
+    exit(json_encode(['success' => false, 'message' => 'Please provide comment content and image ID.']));
 }
 
 $userId = $_SESSION["user_id"];
@@ -20,7 +32,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows == 0) {
-    exit("The specified image does not exist.");
+    exit(json_encode(['success' => false, 'message' => 'The specified image does not exist.']));
 }
 
 // Update the SQL statement to include image_id
@@ -29,12 +41,12 @@ $stmt = $mysqli->prepare($sql);
 $stmt->bind_param("isi", $userId, $commentContent, $imageId); // Bind the image ID as an integer
 
 if ($stmt->execute()) {
-    ob_start(); // Start output buffering
-    echo "Comment successfully added!";
-    ob_end_clean(); // Clean (discard) the output buffer
-    header('Location: confirmation.php');
-    exit(); // Ensure that no further code is executed after redirection
+    // Display a popup confirmation
+    echo '<script>alert("Comment successfully added!");</script>';
+    // Redirect to index.php after a short delay
+    echo '<script>window.setTimeout(function(){ window.location.href = "index.php"; }, 1000);</script>';
+    exit;
 } else {
-    echo "Error: " . $mysqli->error;
+    exit(json_encode(['success' => false, 'message' => 'Error adding comment.']));
 }
 ?>
