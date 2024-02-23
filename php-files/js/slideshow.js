@@ -17,6 +17,8 @@ function initializeSlideshow(images) {
     images.forEach((image, index) => {
         const slide = document.createElement('div');
         slide.className = 'mySlides fade';
+        // Include the image ID as a data attribute
+        slide.setAttribute('data-imageId', image.id); // Assuming each image object has an id
         slide.innerHTML = `<img src="${image.filepath}" alt="${image.filename}" style="width:100%">`;
         container.appendChild(slide);
     });
@@ -30,6 +32,13 @@ function showSlide(n) {
         slides[i].style.display = "none";  
     }
     slides[slideIndex].style.display = "block";  
+    // Retrieve imageId from the current slide
+    const currentSlide = slides[slideIndex];
+    const imageId = currentSlide.getAttribute('data-imageId');
+    // Update the hidden input for comments form
+    document.getElementById('currentImageId').value = imageId;
+    // Dynamically load comments for the current slide
+    loadCommentsForImage(imageId);
 }
 
 function changeSlide(n) {
@@ -39,4 +48,32 @@ function changeSlide(n) {
 function setImageForComment(imageId) {
     document.querySelector('input[name="imageId"]').value = imageId;
     loadCommentsForImage(imageId); // Load comments for this image
+}
+
+function loadCommentsForImage(imageId) {
+    fetch(`load_comments.php?imageId=${imageId}`)
+    .then(response => response.json())
+    .then(comments => {
+        const commentsContainer = document.querySelector('.comments-container');
+        commentsContainer.innerHTML = ''; // Clear existing comments
+        comments.forEach(comment => {
+            const commentElement = document.createElement('div');
+            commentElement.className = 'comment';
+            commentElement.innerHTML = `
+                <p><strong>${escapeHTML(comment.name)}</strong> at ${escapeHTML(comment.created_at)}</p>
+                <p>${escapeHTML(comment.content)}</p>
+            `;
+            commentsContainer.appendChild(commentElement);
+        });
+    })
+    .catch(error => console.error('Error loading comments:', error));
+}
+
+// Utility function to prevent XSS
+function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', 
+            "'": '&#39;', '"': '&quot;'
+        }[tag] || tag));
 }

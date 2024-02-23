@@ -29,7 +29,11 @@ $stmt = $mysqli->prepare($sql);
 $stmt->bind_param("isi", $userId, $commentContent, $imageId); // Bind the image ID as an integer
 
 if ($stmt->execute()) {
+    ob_start(); // Start output buffering
     echo "Comment successfully added!";
+    ob_end_clean(); // Clean (discard) the output buffer
+    header('Location: confirmation.php');
+    exit(); // Ensure that no further code is executed after redirection
 } else {
     echo "Error: " . $mysqli->error;
 }

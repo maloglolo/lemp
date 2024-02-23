@@ -101,10 +101,6 @@ if (isset($_SESSION["user_id"])) {
             document.getElementById('currentImageId').value = imageId;
         }
 
-        function changeSlideAndUpdate(imageId, direction) {
-            changeSlide(direction);
-            updateImageId(imageId);
-        }
     </script>
     <script>
         function confirmDelete(fileId) {
@@ -116,11 +112,16 @@ if (isset($_SESSION["user_id"])) {
     <script src="js/comments.js"></script>
 </head>
 <body>
+<div style="text-align: right;">
     <?php if (isset($_SESSION['user_id'])): ?>
-        <form action="logout.php" method="post" style="text-align: right;">
+        <form action="logout.php" method="post" style="display: inline;">
             <button type="submit">Logout</button>
         </form>
+        <a href="profile.php" style="display: inline; text-decoration: none;">
+            <button>Profile</button>
+        </a>
     <?php endif; ?>
+</div>
 
     <h1>Home</h1>
     <p>Hello <?= htmlspecialchars($user["name"])?> ! </p>
@@ -128,31 +129,19 @@ if (isset($_SESSION["user_id"])) {
     <!-- Slideshow navigation buttons -->
     <div class="slideshow-navigation">
         <!-- Pass the imageId to the changeSlideAndUpdate function -->
-        <button class="prev" onclick="changeSlideAndUpdate(<?php echo $imageId; ?>, -1)">&#10094; Prev</button>
-        <button class="next" onclick="changeSlideAndUpdate(<?php echo $imageId; ?>, 1)">Next &#10095;</button>
+            <button class="prev" onclick="changeSlide(-1)">&#10094; Prev</button>
+            <button class="next" onclick="changeSlide(1)">Next &#10095;</button>
     </div>
     <div class="slideshow-container">
         <!-- Dynamic slides will be added here -->
     </div>
+    <div class="comments-section">
+    <h3>Comments</h3>
+    <div class="comments-container">
+        <!-- Comments will be loaded here by the loadCommentsForImage JavaScript function -->
+    </div>
+</div>
 
-    <?php
-    $mysqli = require __DIR__ . "/database_connection.php";
-
-    $sql = "SELECT comments.content, comments.created_at, user.name FROM comments JOIN user ON comments.user_id = user.id ORDER BY comments.created_at DESC";
-    $result = $mysqli->query($sql);
-
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            echo "<div class='comment'>";
-            echo "<p><strong>" . htmlspecialchars($row["name"]) . "</strong> at " . $row["created_at"] . "</p>";
-            echo "<p>" . htmlspecialchars($row["content"]) . "</p>";
-            echo "</div>";
-        }
-    } else {
-        echo "No comments found."; // Add this line for debugging purposes
-    }
-    echo "Image ID: " . $imageId;
-    ?>
 
     <form action="submit_comment.php" method="post">
         <textarea name="commentContent" required></textarea>
@@ -166,39 +155,7 @@ if (isset($_SESSION["user_id"])) {
             <input type="file" name="fileToUpload" id="fileToUpload">
             <input type="submit" value="Upload Image" name="submit">
         </form>
-        <?php
-
-        // Check if the user is logged in
-        if (!isset($_SESSION['user_id'])) {
-            die('You must be logged in to view files.');
-        }
-
-        // Get info from the db
-        $userId = $_SESSION['user_id'];
-        $result = $mysqli->query("SELECT id, filepath, filesize, filename, uploaded_at, user_ip FROM uploaded_files WHERE user_id = $userId");
-
-        // Display file info and delete script
-        while ($row = $result->fetch_assoc()) {
-            $filepathEscaped = htmlspecialchars($row['filepath']);
-            $filenameEscaped = htmlspecialchars($row['filename']);
-            $filesizeMB = number_format($row['filesize'] / 1048576, 2); // Format the file size to KB with 2 decimal places
-            $uploadedAtEscaped = htmlspecialchars($row['uploaded_at']);
-            $userIp = htmlspecialchars($row['user_ip']); // Retrieve and escape the user's IP address   
-            echo '<div>';
-            // Make the thumbnail a clickable link that opens the full-size image in a new tab
-            echo '<a href="' . $filepathEscaped . '" target="_blank">';
-            echo '<img src="' . $filepathEscaped . '" alt="' . $filenameEscaped . '" style="width: 100px; height: auto;" />';
-            echo '</a>';
-            echo '<p>Filename: ' . $filenameEscaped . '</p>';
-            echo '<p>Size: ' . $filesizeMB . ' MB</p>';
-            echo '<p>Uploaded: ' . $uploadedAtEscaped . '</p>';
-            echo '<p>User IP: ' . $userIp . '</p>'; // Display the user's IP address
-            echo '<button style="color: red;" onclick="confirmDelete(' . $row['id'] . ')">Delete</button>';
-            // Link to the confirmation page instead of a direct form submission
-            #echo '<a href="confirm_delete.php?file_id=' . $row['id'] . '" style="color: red;">Delete</a>';    
-            echo '</div>';
-        }
-        ?>
+       
     <?php else: ?>
         <p><a href="login.php">Login in</a> or <a href="signup.html">sign up</a></p>
     <?php endif; ?>
