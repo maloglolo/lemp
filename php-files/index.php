@@ -107,17 +107,19 @@ if (isset($_SESSION["user_id"])) {
         .dropdown {
             position: relative;
             display: inline-block;
+            text-align: right; /* Ensure dropdown text aligns to the right */
         }
         
         .dropdown-content {
             display: none;
             position: absolute;
             right: 0;
-            background-color: #f9f9f9;
+            background-color: rgba(249, 249, 249, 0.01); /* Semi-transparent background */
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             padding: 12px 16px;
             z-index: 1;
+            text-align: right; /* Align button texts to the right */
         }
         
         .dropdown:hover .dropdown-content {
@@ -127,6 +129,13 @@ if (isset($_SESSION["user_id"])) {
         .dropdown-content form,
         .dropdown-content a {
             margin: 5px 0;
+        }
+        
+        /* Right-align buttons within forms and links */
+        .dropdown-content form button,
+        .dropdown-content a button {
+            width: 100%; /* Make buttons fill the container */
+            text-align: right; /* Align text to the right */
         }
     </style>
 

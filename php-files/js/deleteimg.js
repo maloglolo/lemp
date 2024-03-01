@@ -1,8 +1,6 @@
-// script.js
-
 function confirmDelete(fileId) {
-    if (confirm("Are you sure you want to delete this file?")) {
-        // Make an AJAX request to delete the file
+    if (confirm("Are you sure you want to delete this file and all associated comments?")) {
+        // Make an AJAX request to delete the file and its comments
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "profile.php", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
